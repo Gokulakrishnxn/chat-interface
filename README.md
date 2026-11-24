@@ -1,20 +1,40 @@
-# Kivo — Chat UI Interface
+<div align="center">
 
-An open-source, dark, minimal AI chat interface built with **Next.js 16** and **Tailwind CSS v4**.
-Use it as a starting point for your own AI assistant, or borrow any piece of it for your designs. It's MIT licensed, so you're free to use, change and ship it.
+# Kivo · Chat UI Interface
+
+**A free, open-source AI chat interface you can drop into your own project.**
+
+Dark, minimal and responsive. Built with Next.js 16, React 19 and Tailwind CSS v4.
+
+[Quick start](#quick-start) · [Features](#features) · [Customise](#customise) · [Connect a model](#connect-a-real-ai-model) · [License](#license)
+
+</div>
+
+---
+
+## What is this?
+
+Kivo is a ready-made **front end for an AI chat app**: the sidebar, the menu, the message list and the message box.
+It runs straight away with placeholder replies, so you can explore the design, change it, and then connect it to any AI model you like.
+
+It's **MIT licensed**, so you can use it in personal or commercial projects, change anything, and ship it. You don't need to ask.
 
 ## Features
 
-- **Collapsible sidebar**: a slim icon rail that expands into New chat, Library, Recents, Credits and Account. On phones it becomes a slide-in drawer.
-- **Liquid-glass MENU pill**: centred in the top bar. Its two "eyes" follow the cursor and blink, and its label rolls between `MENU` and `CLOSE`.
-- **Usage peek**: the pill loops between the 5-hour usage (with a progress ring) and `MENU` every 10 seconds.
-- **Menu with usage limits**: 5-hour and weekly limits with progress bars, plus New chat (⌘K), Rename, Share, Export, Settings and Delete.
-- **Composer**: a textarea that grows as you type, an attach button, a model picker (`Glance`) and a send button, with an animated colour glow behind it.
-- **Kivo bloom logo**: an original SVG mark that spins while the assistant is replying.
-- **Responsive**: works on phones, tablets and desktops, with safe-area padding on mobile.
-- **No UI library**: plain React components and Tailwind. Icons are inline SVG.
+| | |
+| --- | --- |
+| 🧭 **Collapsible sidebar** | A slim icon rail that expands into New chat, Library, Recents, Credits and Account. On phones it slides in as a drawer. |
+| 👀 **Liquid-glass MENU button** | A frosted pill centred at the top. Its two "eyes" follow your cursor and blink, and the label rolls between `MENU` and `CLOSE`. |
+| 📊 **Usage at a glance** | The button alternates every 10 seconds between the 5-hour usage (with a progress ring) and `MENU`. |
+| 📋 **Menu with limits** | 5-hour and weekly usage bars, plus New chat (⌘K / Ctrl K), Rename, Share, Export, Settings and Delete. |
+| ✍️ **Message box** | Grows as you type. Enter sends, Shift+Enter adds a new line. Includes an attach button, a model picker and a soft colour glow. |
+| ✳️ **Kivo logo** | An original coral "bloom" mark. It spins while the assistant is replying, and it's also the browser-tab icon. |
+| 📱 **Responsive** | Works on phones, tablets and desktops. |
+| 🪶 **Lightweight** | No UI library: plain React components, Tailwind classes and inline SVG icons. |
 
-## Getting started
+## Quick start
+
+You need **Node.js 20.9 or newer**.
 
 ```bash
 git clone https://github.com/Gokulakrishnxn/Chat-Ui-interface.git
@@ -23,45 +43,65 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:3000>.
+Then open **http://localhost:3000**.
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Build for production |
+| `npm start` | Run the production build |
+| `npm run lint` | Check the code with ESLint |
+
+## Customise
+
+Everything you're likely to change is in one place:
+
+| I want to change… | Edit |
+| --- | --- |
+| Colours (background, panels, text) | the CSS variables at the top of [`src/app/globals.css`](src/app/globals.css) |
+| The logo (shape or colour) | [`src/components/kivo-logo.tsx`](src/components/kivo-logo.tsx) |
+| The app name | `metadata` in [`src/app/layout.tsx`](src/app/layout.tsx) and the wordmark in `kivo-logo.tsx` |
+| Usage limits in the menu | the `limits` list in [`src/components/menu-button.tsx`](src/components/menu-button.tsx) |
+| How long usage / MENU each show | `PEEK_MS` in `menu-button.tsx` (default 10 seconds) |
+| Menu items | the `items` list in `menu-button.tsx` |
+| The user's name and plan | the Account button in [`src/components/sidebar.tsx`](src/components/sidebar.tsx) |
+| The placeholder replies | `replies` and `send()` in [`src/components/chat-app.tsx`](src/components/chat-app.tsx) |
+
+## Connect a real AI model
+
+Replies are fake by default, so the app runs without any API keys.
+To use a real model:
+
+1. Create an API route (for example `src/app/api/chat/route.ts`) that calls your AI provider.
+2. In `send()` inside [`src/components/chat-app.tsx`](src/components/chat-app.tsx), replace the `setTimeout` with a `fetch` to that route.
+3. Add the reply, or stream it in piece by piece, to the message list.
+
+Keep your API keys on the server (in the route), never in the components.
 
 ## Project structure
 
 ```
 src/
 ├─ app/
-│  ├─ globals.css      # colour tokens, liquid-glass styles, animations
-│  ├─ icon.svg         # favicon (Kivo bloom)
-│  ├─ layout.tsx
-│  └─ page.tsx
+│  ├─ globals.css      colours, liquid-glass style, animations
+│  ├─ icon.svg         browser-tab icon
+│  ├─ layout.tsx       page shell, font, title
+│  └─ page.tsx         home page
 ├─ components/
-│  ├─ chat-app.tsx     # page layout, chat state, top bar, messages
-│  ├─ sidebar.tsx      # collapsible sidebar / mobile drawer
-│  ├─ menu-button.tsx  # liquid-glass MENU pill, usage peek, dropdown
-│  ├─ composer.tsx     # message input
-│  ├─ kivo-logo.tsx    # Kivo bloom mark + wordmark
-│  └─ icons.tsx        # inline SVG icons
+│  ├─ chat-app.tsx     layout, chat state, top bar, messages
+│  ├─ sidebar.tsx      collapsible sidebar / phone drawer
+│  ├─ menu-button.tsx  MENU pill, usage display, dropdown
+│  ├─ composer.tsx     message box
+│  ├─ kivo-logo.tsx    logo mark and wordmark
+│  └─ icons.tsx        SVG icons
 └─ lib/
-   └─ cn.ts            # className helper
+   └─ cn.ts            joins class names
 ```
 
-## Customising
+## Contributing
 
-| What | Where |
-| --- | --- |
-| Colours (background, panels, text) | the CSS variables at the top of `src/app/globals.css` |
-| Logo shape or colour | `src/components/kivo-logo.tsx` |
-| Usage limits shown in the menu | the `limits` array in `src/components/menu-button.tsx` |
-| Usage/MENU loop timing | `PEEK_MS` in `src/components/menu-button.tsx` |
-| Menu items | the `items` array in `src/components/menu-button.tsx` |
-| Assistant replies | `replies` and `send()` in `src/components/chat-app.tsx` |
-
-## Connecting a real model
-
-Replies are mocked so the UI runs with no API keys. To connect a model, swap the
-`setTimeout` in `send()` (`src/components/chat-app.tsx`) for a call to your API route
-and stream the response into the message list.
+Issues and pull requests are welcome. If you build something with Kivo, feel free to share it.
 
 ## License
 
-[MIT](./LICENSE) © Gokulakrishnan
+[MIT](./LICENSE) © Gokulakrishnan. Free to use, change and share.
